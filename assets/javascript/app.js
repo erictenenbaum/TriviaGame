@@ -58,6 +58,8 @@ var trivia = {
 			questionBank[trivia.j].answerChoices[2], 
 			questionBank[trivia.j].answerChoices[3], 
 			questionBank[trivia.j].correctAnswerIndex);
+
+		trivia.timer();
 	},
 
 	questionOne: function(q, a, b, c, d, e) {	
@@ -123,9 +125,9 @@ var trivia = {
 
 nextQuestion: function() {
 
-	if (trivia.j < questionBank.length - 1) {
-		trivia.j++
-	}
+	// if (trivia.j < questionBank.length - 1) {
+	// 	trivia.j++
+	// }
 	
 	trivia.j++;
 	trivia.questionOne(questionBank[trivia.j].question, 
@@ -134,8 +136,26 @@ nextQuestion: function() {
 			questionBank[trivia.j].answerChoices[2], 
 			questionBank[trivia.j].answerChoices[3], 
 			questionBank[trivia.j].correctAnswerIndex);
+
+	trivia.timer();
+},
+
+timer: function() {
+	setTimeout(function() {
+
+		if(trivia.j < questionBank.length -1) {
+
+			trivia.nextQuestion();
+
+		}
+		else {
+			alert("thats it!");
+		}
+
+		}, 1000 * 10);
 	}
 }
+
 
 trivia.initializeGame();
 

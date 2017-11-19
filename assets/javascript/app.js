@@ -3,9 +3,12 @@ var answerOneDOM = $("#answerOne");
 var answerTwoDOM = $("#answerTwo");
 var answerThreeDOM = $("#answerThree");
 var answerFourDOM = $("#answerFour");
+var countDownDOM = $("#counter");
 var clear;
+var clearCountdown;
 var correctAnswerCounter;
 var incorrectAnswerCounter;
+var unansweredCounter;
 
 var questionBank = [
 {
@@ -56,83 +59,119 @@ var questionBank = [
 
 var trivia = {	
 
-	j: 0,
+		j: 0,
+		n: 10,
 
-	initializeGame: function() {
-		trivia.j = 0;
-		correctAnswerCounter = 0;
-		incorrectAnswerCounter = 0;
+		initializeGame: function() {
+			// trivia.n = 10;
+			trivia.j = 0;
+			correctAnswerCounter = 0;
+			incorrectAnswerCounter = 0;
+			countDownDOM.empty();
+			clearInterval(clear);
+			clearInterval(clearCountdown);
 
-		trivia.questionOne(questionBank[trivia.j].question, 
-			questionBank[trivia.j].answerChoices[0], 
-			questionBank[trivia.j].answerChoices[1],
-			questionBank[trivia.j].answerChoices[2], 
-			questionBank[trivia.j].answerChoices[3]
-			);
-
-		trivia.timer();
-	},
-
-
-	nextQuestion: function() {
-
-		if (trivia.j < questionBank.length - 1) {
-			// trivia.j++
-			console.log("continue");
-		}
-		else {
-			alert("thats it!");
-		}
-		clearInterval(clear)
-		trivia.j++;
-		trivia.questionOne(questionBank[trivia.j].question, 
+			trivia.questionOne(questionBank[trivia.j].question, 
 				questionBank[trivia.j].answerChoices[0], 
 				questionBank[trivia.j].answerChoices[1],
 				questionBank[trivia.j].answerChoices[2], 
 				questionBank[trivia.j].answerChoices[3]
-			);
+				);
 
-		trivia.timer();
-	},
+			trivia.timer();
+			trivia.resetCountDown();	
+			
+			
+		},
 
-	timer: function() {
-		clear = setTimeout(function() {
 
-			if(trivia.j < questionBank.length -1) {
+		nextQuestion: function() {
 
-				trivia.nextQuestion();
-
+			if (trivia.j < questionBank.length - 1) {
+				// trivia.j++
+				console.log("continue");			
 			}
 			else {
 				alert("thats it!");
 			}
+			clearInterval(clear);
+			clearInterval(clearCountdown);
+			
+			trivia.j++;
+			trivia.questionOne(questionBank[trivia.j].question, 
+					questionBank[trivia.j].answerChoices[0], 
+					questionBank[trivia.j].answerChoices[1],
+					questionBank[trivia.j].answerChoices[2], 
+					questionBank[trivia.j].answerChoices[3]
+				);
 
-			}, 10000);
-	},
-	questionOne: function (q, a, b, c, d) {
+			trivia.timer();
+			trivia.resetCountDown();
 
-		var userGuess;
-		questionDOM.html(q)
-		answerOneDOM.html(a).attr('data-value', a);
-		answerTwoDOM.html(b).attr('data-value', b);
-		answerThreeDOM.html(c).attr('data-value', c);
-		answerFourDOM.html(d).attr('data-value', d);
-		// $("#answerThree").html(e) // to handle e param
-	},
-	displayPage: function() {
 
-		$("#container").html("display page");
-		
-		setTimeout(function() {
-			// $("#container").html("new page")
-			trivia.nextQuestion();
-		}, 3000)
-		// clearInterval();
+			
+				
+			// setTimeout(trivia.resetCountDown,1000);
+		},
 
-		
-			// trivia.questionOne();
+		timer: function() {
+
+			clear = setTimeout(function() {
+
+				if(trivia.j < questionBank.length -1) {		
+					trivia.nextQuestion();						
+				}
+				else {
+					alert("thats it!");
+				}
+
+				}, 10000);
+		},
+		questionOne: function (q, a, b, c, d) {
+
+			var userGuess;
+			questionDOM.html(q)
+			answerOneDOM.html(a).attr('data-value', a);
+			answerTwoDOM.html(b).attr('data-value', b);
+			answerThreeDOM.html(c).attr('data-value', c);
+			answerFourDOM.html(d).attr('data-value', d);			
+		},
+		displayPage: function() {
+			
+			clearInterval(clearCountdown);
+			questionDOM.html("You have gotten " + correctAnswerCounter
+				+ " questions right, and " + incorrectAnswerCounter + " questions wrong");
+
+			answerOneDOM.empty();
+			answerTwoDOM.empty();
+			answerThreeDOM.empty();
+			answerFourDOM.empty();
+			countDownDOM.empty();
+
+				
+			setTimeout(function() {			
+				trivia.nextQuestion();			
+			}, 3000)		
+				
+		},
+		countDown: function() {
+
+	 	 	clearCountdown = setTimeout(function() {
+   			trivia.n--;
+			if(trivia.n > 0){	     		 
+	     		 trivia.countDown();
+   			}
+
+		   console.log(trivia.n);
+		   $("#counter").html(trivia.n);
+		}, 1000);
+	},	
+		resetCountDown: function() {
+
+			countDownDOM.empty();
+			trivia.n = 10;
+			trivia.countDown();
 	}
-
 }
 
 $("#startButton").on("click", function() {
@@ -143,36 +182,41 @@ $("#startButton").on("click", function() {
 $("#answerOne").on("click", function () {
 
 	if (questionBank[trivia.j].correctAnswerIndex === $(this).attr('data-value')) {
-		console.log("true");		
-		// trivia.nextQuestion();
+		console.log("true");
+		++correctAnswerCounter;
 		trivia.displayPage();
 			
 	}
 	else {
 		console.log("false");
-		trivia.nextQuestion();
+		++incorrectAnswerCounter;
+		trivia.displayPage();
 	}
 
 });
 $("#answerTwo").on("click", function () {
 	if (questionBank[trivia.j].correctAnswerIndex === $(this).attr('data-value')) {
 		console.log("true");
-		trivia.nextQuestion();
+		++correctAnswerCounter;
+		trivia.displayPage();
 	}
 	else {
 		console.log("false");
-		trivia.nextQuestion();
+		++incorrectAnswerCounter;
+		trivia.displayPage();
 	}
 
 });
 $("#answerThree").on("click", function () {
 	if (questionBank[trivia.j].correctAnswerIndex === $(this).attr('data-value')) {
 		console.log("true");
-		trivia.nextQuestion();
+		++correctAnswerCounter;
+		trivia.displayPage();
 	}
 	else {
 		console.log("false");
-		trivia.nextQuestion();
+		++incorrectAnswerCounter;
+		trivia.displayPage();
 	}
 
 
@@ -181,11 +225,13 @@ $("#answerThree").on("click", function () {
 $("#answerFour").on("click", function () {
 	if (questionBank[trivia.j].correctAnswerIndex === $(this).attr('data-value')) {
 		console.log("true");
-		trivia.nextQuestion();
+		++correctAnswerCounter;
+		trivia.displayPage();
 	}
 	else {
 		console.log("false");
-		trivia.nextQuestion();
+		++incorrectAnswerCounter;
+		trivia.displayPage();
 	}
 
 })

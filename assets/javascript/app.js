@@ -4,6 +4,7 @@ var answerTwoDOM = $("#answerTwo");
 var answerThreeDOM = $("#answerThree");
 var answerFourDOM = $("#answerFour");
 var countDownDOM = $("#counter");
+var startButtonDOM = $("#startButton");
 var clear;
 var clearCountdown;
 var correctAnswerCounter;
@@ -14,7 +15,7 @@ var questionBank = [
 {
 	question: "Who was the first president of the United States?",
 	answerChoices: ["George Washington", "Bill Clinton", "Abe Lincoln", "Jim Carey"],
-	correctAnswerIndex: "George Washington",
+	correctAnswerIndex: "George Washington",	
 },
 {
 	question: "Who won the 2017 World Series?",
@@ -29,7 +30,7 @@ var questionBank = [
 {
 	question: "Which direction does the sun rise?",
 	answerChoices: ["North", "East", "South", "West"],
-	correctAnswerIndex: "East",
+	correctAnswerIndex: "East",	
 },
 {
 	question: "What year did the Diamondbacks win the World Series?",
@@ -62,12 +63,13 @@ var trivia = {
 		j: 0,
 		n: 10,
 
-		initializeGame: function() {
-			// trivia.n = 10;
+		initializeGame: function() {			
 			trivia.j = 0;
 			correctAnswerCounter = 0;
 			incorrectAnswerCounter = 0;
+			unansweredCounter = 0;
 			countDownDOM.empty();
+			startButtonDOM.hide();
 			clearInterval(clear);
 			clearInterval(clearCountdown);
 
@@ -79,20 +81,15 @@ var trivia = {
 				);
 
 			trivia.timer();
-			trivia.resetCountDown();	
-			
-			
+			trivia.resetCountDown();							
 		},
-
-
 		nextQuestion: function() {
 
-			if (trivia.j < questionBank.length - 1) {
-				// trivia.j++
+			if (trivia.j < questionBank.length - 1) {				
 				console.log("continue");			
 			}
 			else {
-				alert("thats it!");
+				startButtonDOM.show();
 			}
 			clearInterval(clear);
 			clearInterval(clearCountdown);
@@ -102,24 +99,19 @@ var trivia = {
 					questionBank[trivia.j].answerChoices[0], 
 					questionBank[trivia.j].answerChoices[1],
 					questionBank[trivia.j].answerChoices[2], 
-					questionBank[trivia.j].answerChoices[3]
+					questionBank[trivia.j].answerChoices[3],
 				);
-
 			trivia.timer();
-			trivia.resetCountDown();
-
-
-			
-				
-			// setTimeout(trivia.resetCountDown,1000);
+			trivia.resetCountDown();	
+						
 		},
-
 		timer: function() {
 
 			clear = setTimeout(function() {
 
-				if(trivia.j < questionBank.length -1) {		
-					trivia.nextQuestion();						
+				if(trivia.j < questionBank.length -1) {	
+					++unansweredCounter;	
+					trivia.displayPage();						
 				}
 				else {
 					alert("thats it!");
@@ -136,18 +128,18 @@ var trivia = {
 			answerThreeDOM.html(c).attr('data-value', c);
 			answerFourDOM.html(d).attr('data-value', d);			
 		},
-		displayPage: function() {
-			
+		displayPage: function() {			
 			clearInterval(clearCountdown);
-			questionDOM.html("You have gotten " + correctAnswerCounter
-				+ " questions right, and " + incorrectAnswerCounter + " questions wrong");
+			clearInterval(clear);
+			questionDOM.html("The correct answer was " + questionBank[trivia.j].correctAnswerIndex);
+			answerOneDOM.html("You have answered " + correctAnswerCounter + 
+				" questions correctly, " + incorrectAnswerCounter +
+				" questions inccorectly, and have not answered " + unansweredCounter + " questions");
 
-			answerOneDOM.empty();
 			answerTwoDOM.empty();
 			answerThreeDOM.empty();
 			answerFourDOM.empty();
 			countDownDOM.empty();
-
 				
 			setTimeout(function() {			
 				trivia.nextQuestion();			
@@ -161,13 +153,15 @@ var trivia = {
 			if(trivia.n > 0){	     		 
 	     		 trivia.countDown();
    			}
+   			else {
+   				console.log("unanswered");
+   			}
 
 		   console.log(trivia.n);
 		   $("#counter").html(trivia.n);
 		}, 1000);
 	},	
 		resetCountDown: function() {
-
 			countDownDOM.empty();
 			trivia.n = 10;
 			trivia.countDown();
@@ -179,61 +173,66 @@ $("#startButton").on("click", function() {
 		console.log("hi");
 })
 
-$("#answerOne").on("click", function () {
+// $("#answerOne").on("click", function () {
 
+// 	if (questionBank[trivia.j].correctAnswerIndex === $(this).attr('data-value')) {
+// 		console.log("true");
+// 		++correctAnswerCounter;
+// 		trivia.displayPage(questionBank[trivia.j].correctAnswerIndex);			
+// 	}
+// 	else {
+// 		console.log("false");
+// 		++incorrectAnswerCounter;
+// 		trivia.displayPage(questionBank[trivia.j].correctAnswerIndex);
+// 	}
+// });
+// $("#answerTwo").on("click", function () {
+// 	if (questionBank[trivia.j].correctAnswerIndex === $(this).attr('data-value')) {
+// 		console.log("true");
+// 		++correctAnswerCounter;
+// 		trivia.displayPage(questionBank[trivia.j].correctAnswerIndex);
+// 	}
+// 	else {
+// 		console.log("false");
+// 		++incorrectAnswerCounter;
+// 		trivia.displayPage(questionBank[trivia.j].correctAnswerIndex);
+// 	}
+// });
+// $("#answerThree").on("click", function () {
+// 	if (questionBank[trivia.j].correctAnswerIndex === $(this).attr('data-value')) {
+// 		console.log("true");
+// 		++correctAnswerCounter;
+// 		trivia.displayPage(questionBank[trivia.j].correctAnswerIndex);
+// 	}
+// 	else {
+// 		console.log("false");
+// 		++incorrectAnswerCounter;
+// 		trivia.displayPage(questionBank[trivia.j].correctAnswerIndex);
+// 	}
+// });
+// $("#answerFour").on("click", function () {
+// 	if (questionBank[trivia.j].correctAnswerIndex === $(this).attr('data-value')) {
+// 		console.log("true");
+// 		++correctAnswerCounter;
+// 		trivia.displayPage(questionBank[trivia.j].correctAnswerIndex);
+// 	}
+// 	else {
+// 		console.log("false");
+// 		++incorrectAnswerCounter;
+// 		trivia.displayPage(questionBank[trivia.j].correctAnswerIndex);
+// 	}
+// });
+
+$(".answer").on("click", function () {
 	if (questionBank[trivia.j].correctAnswerIndex === $(this).attr('data-value')) {
 		console.log("true");
 		++correctAnswerCounter;
 		trivia.displayPage();
-			
 	}
 	else {
 		console.log("false");
 		++incorrectAnswerCounter;
 		trivia.displayPage();
 	}
-
 });
-$("#answerTwo").on("click", function () {
-	if (questionBank[trivia.j].correctAnswerIndex === $(this).attr('data-value')) {
-		console.log("true");
-		++correctAnswerCounter;
-		trivia.displayPage();
-	}
-	else {
-		console.log("false");
-		++incorrectAnswerCounter;
-		trivia.displayPage();
-	}
-
-});
-$("#answerThree").on("click", function () {
-	if (questionBank[trivia.j].correctAnswerIndex === $(this).attr('data-value')) {
-		console.log("true");
-		++correctAnswerCounter;
-		trivia.displayPage();
-	}
-	else {
-		console.log("false");
-		++incorrectAnswerCounter;
-		trivia.displayPage();
-	}
-
-
-
-})
-$("#answerFour").on("click", function () {
-	if (questionBank[trivia.j].correctAnswerIndex === $(this).attr('data-value')) {
-		console.log("true");
-		++correctAnswerCounter;
-		trivia.displayPage();
-	}
-	else {
-		console.log("false");
-		++incorrectAnswerCounter;
-		trivia.displayPage();
-	}
-
-})
-
 

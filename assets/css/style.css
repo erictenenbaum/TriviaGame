@@ -3,8 +3,8 @@ h1 {
 }
 
 body {
-	/*background-image: url("../images/trivia_night.jpg")*/
-	background-color: grey;
+	background-image: url("../images/trivia_night.jpg")
+	/*background-color: grey;*/
 }
 
 .answer {
@@ -17,7 +17,8 @@ body {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 25px;
+    border-radius: 5px;
 }
 
 .answer:hover {
@@ -26,17 +27,58 @@ body {
 }
 
 #question {
-	font-size: 20px;
+	font-size: 40px;
 	font-weight: bold;
 }
 
 #counter {
-	font-size: 25px;
+	font-size: 45px;
 	font-weight: bold;
+	/*border: solid 1px black;*/
 /*	text-align: center;*/
 }
 
-/*.container {
-	margin-left: 30px;
+.container {
+	margin: 10%;
 	text-align: center;
-}*/
+	height: 80%;
+	width: 80%;	
+}
+
+.triviaFrame {
+	
+	padding: 20px;
+	/*border: solid 1px black;*/
+	background-color: orange;
+	opacity: 0.9;
+	border-radius: 25px;
+}
+
+.triviaFrame:hover {
+	opacity: 1.0;
+}
+
+/*#showGif {
+	opacity: 1.0;
+	background-color: white;
+}
+*/
+#startButton {
+	-webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    /*background-color: #4CAF50;*/ /* Green */
+    border: none;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 25px;
+    border-radius: 25px;
+}
+
+#startButton:hover {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}
+

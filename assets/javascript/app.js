@@ -98,6 +98,7 @@ var trivia = {
 				console.log("continue");			
 			}
 			else {
+				trivia.finalResults();
 				startButtonDOM.show();
 			}
 			clearInterval(clear);
@@ -120,10 +121,10 @@ var trivia = {
 
 				if(trivia.j < questionBank.length -1) {	
 					++unansweredCounter;	
-					trivia.displayPage("You didn't answer in time!");						
+					trivia.displayPage("Out of time!" + "The correct answer was " + questionBank[trivia.j].correctAnswerIndex);						
 				}
 				else {
-					alert("thats it!");
+					trivia.finalResults();
 				}
 
 				}, 10000);
@@ -141,29 +142,23 @@ var trivia = {
 			clearInterval(clearCountdown);
 			clearInterval(clear);
 
-			countDownDOM.html(e + "The correct answer was " + questionBank[trivia.j].correctAnswerIndex);
-			questionDOM.html("You have answered " + correctAnswerCounter + 
-				" questions correctly, " + incorrectAnswerCounter +
-				" questions inccorectly, and have not answered " + unansweredCounter + " questions");
-			//<iframe src="https://giphy.com/embed/l0MYurb5ilZl6ageI" width="480" height="330" frameBorder="0" class="giphy-embed" allowFullScreen></iframe> <p><a href="https://giphy.com/gifs/hulu-parks-and-recreation-nbc-l0MYurb5ilZl6ageI">via GIPHY</a></p>
+			countDownDOM.html(e);			
+			
 			var iframe = $("<iframe>").attr("src", questionBank[trivia.j].giffy).attr({
 				width: "480",
 				height: "330"
 			})
 			$("#showGif").html(iframe);
-
+			
+			questionDOM.empty();
 			answerOneDOM.empty();
 			answerTwoDOM.empty();		
 			answerThreeDOM.empty();
-			answerFourDOM.empty();
-
-
-			// countDownDOM.empty();
+			answerFourDOM.empty();			
 				
 			setTimeout(function() {			
 				trivia.nextQuestion();			
-			}, 5000)		
-				
+			}, 5000)						
 		},
 		countDown: function() {
 
@@ -184,7 +179,24 @@ var trivia = {
 			countDownDOM.empty();
 			trivia.n = 10;
 			trivia.countDown();
-	}
+	},
+		finalResults: function() {
+			clearInterval(clearCountdown);
+			clearInterval(clear);
+			
+			questionDOM.html("That's the end of the game!" + "<br>" + "Final Results:" + "<br>" +
+				"Correct Answers: " + correctAnswerCounter + "<br>" +
+				"Incorrect Answers: " + incorrectAnswerCounter + "<br>" +
+				"Unanswered Questions: " + unansweredCounter);	
+			
+			answerOneDOM.empty();
+			answerTwoDOM.empty();		
+			answerThreeDOM.empty();
+			answerFourDOM.empty();
+			countDownDOM.empty();
+			$("#showGif").empty();
+
+		}	
 }
 
 $("#startButton").on("click", function() {
@@ -202,57 +214,8 @@ $(".answer").on("click", function () {
 	else {
 		console.log("false");
 		++incorrectAnswerCounter;
-		trivia.displayPage("Wrong!");
+		trivia.displayPage("Wrong! " + "The correct answer was " + questionBank[trivia.j].correctAnswerIndex);
 	}
 });
 
 
-// $("#answerOne").on("click", function () {
-
-// 	if (questionBank[trivia.j].correctAnswerIndex === $(this).attr('data-value')) {
-// 		console.log("true");
-// 		++correctAnswerCounter;
-// 		trivia.displayPage(questionBank[trivia.j].correctAnswerIndex);			
-// 	}
-// 	else {
-// 		console.log("false");
-// 		++incorrectAnswerCounter;
-// 		trivia.displayPage(questionBank[trivia.j].correctAnswerIndex);
-// 	}
-// });
-// $("#answerTwo").on("click", function () {
-// 	if (questionBank[trivia.j].correctAnswerIndex === $(this).attr('data-value')) {
-// 		console.log("true");
-// 		++correctAnswerCounter;
-// 		trivia.displayPage(questionBank[trivia.j].correctAnswerIndex);
-// 	}
-// 	else {
-// 		console.log("false");
-// 		++incorrectAnswerCounter;
-// 		trivia.displayPage(questionBank[trivia.j].correctAnswerIndex);
-// 	}
-// });
-// $("#answerThree").on("click", function () {
-// 	if (questionBank[trivia.j].correctAnswerIndex === $(this).attr('data-value')) {
-// 		console.log("true");
-// 		++correctAnswerCounter;
-// 		trivia.displayPage(questionBank[trivia.j].correctAnswerIndex);
-// 	}
-// 	else {
-// 		console.log("false");
-// 		++incorrectAnswerCounter;
-// 		trivia.displayPage(questionBank[trivia.j].correctAnswerIndex);
-// 	}
-// });
-// $("#answerFour").on("click", function () {
-// 	if (questionBank[trivia.j].correctAnswerIndex === $(this).attr('data-value')) {
-// 		console.log("true");
-// 		++correctAnswerCounter;
-// 		trivia.displayPage(questionBank[trivia.j].correctAnswerIndex);
-// 	}
-// 	else {
-// 		console.log("false");
-// 		++incorrectAnswerCounter;
-// 		trivia.displayPage(questionBank[trivia.j].correctAnswerIndex);
-// 	}
-// });
